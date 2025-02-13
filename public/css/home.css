@@ -3,6 +3,7 @@
 *{
     font-family: "Red Hat Display", Arial, sans-serif;
     cursor: default;
+    scroll-behavior: smooth;
 }
 
 
