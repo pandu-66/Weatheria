@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/css/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Weatheria</title> 
+</head>
+<body>
+    <% let date1 = new Date(forecast[0].dt_txt.split(" ")[0]); %>
+    <% let date2 = new Date(forecast[8].dt_txt.split(" ")[0]); %>
+    <% let date3 = new Date(forecast[16].dt_txt.split(" ")[0]); %>
+    <% let date4 = new Date(forecast[24].dt_txt.split(" ")[0]); %>
+    <% let date5 = new Date(forecast[32].dt_txt.split(" ")[0]); %>
+    <% let weekDay = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; %>
+    <% let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]; %>
+    <% let day1 = weekDay[date1.getDay()]; %>
+    <% let day2 = weekDay[date2.getDay()]; %>
+    <% let day3 = weekDay[date3.getDay()]; %>
+    <% let day4 = weekDay[date4.getDay()]; %>
+    <% let day5 = weekDay[date5.getDay()]; %>
+
+    <% let month1 = months[date1.getMonth()]; %>
+    <% let month2 = months[date2.getMonth()]; %>
+    <% let month3 = months[date3.getMonth()]; %>
+    <% let month4 = months[date4.getMonth()]; %>
+    <% let month5 = months[date5.getMonth()]; %>
+<div class="container">
+    <header>
+        <div class="logo_container"> 
+            <img class="nav_logo" onclick="goHome()" src="/images/logo.png" alt=""> 
+        </div>
+        
+        <div class="navbar" >
+            <div>
+                <h2 style="padding: 0;" title="Home" class="name" onclick="goHome()">Weatheria</h2>
+                <div>
+                    <span class="current-location"  style="font-weight: 600;"><i class="fa-solid fa-location-dot"></i>&nbsp;
+                        <%= city %>
+                    </span>
+                </div>
+            </div>
+            <ul class="nav-elements">
+                <a href="#home" style="text-decoration: none;color: #ffffff;"><li>Home</li></a>
+                <a href="#hourly" style="text-decoration: none;color: #ffffff;"><li>Hourly</li></a>
+                <a href="#Max-Min" style="text-decoration: none;color: #ffffff;"><li>Max-Min Temp</li></a>
+                <a href="#map-name" style="text-decoration: none;color: #ffffff;"><li>Map</li></a>
+                <a href="#details" style="text-decoration: none;color: #ffffff;"><li>Details</li></a>
+            </ul>
+            
+
+               <div class="nav_search">
+                    <div class="search">
+                        <i class="fa-solid fa-location-dot search-icon"></i>
+                        <form action="search" method="get" id="submitSearch">
+                            <input name="city" type="text" placeholder="Search for a City Location" class="search-bar" id="search" autocomplete="off">
+                            <input type="submit" style="opacity: 0; visibility: hidden;">
+                        </form>
+                        <div class="search_suggestion" id="suggestions">   
+                        </div>
+                    </div>
+              </div>
+              
+            <div  class="theme-icons-container">
+                <a href="/history" style="color: #ffffff; text-decoration: none;">
+                    <div class="theme" style="display: flex; flex-direction: column; text-align: center; margin-right: 0.5rem;">
+                        <i title="Search History" class="fa-solid fa-clock-rotate-left history-icon dark-mode"></i>
+                        <label class="side-names">History</label>
+                    </div>
+                </a>
+                <div class="theme" style="display: flex; flex-direction: column; text-align: center; " id="theme">
+                    <i title="Toggle-Light-Mode" class="fa-solid fa-circle-half-stroke dark-mode"></i>
+                    <label class="side-names">Theme</label>
+                </div>
+                
+            </div>  
+        </div>
+        
+    </header>
+
+
+    <div class="hero-main-container">
+        <div class="dashboard-container">
+            <div class="weather-dashboard">
+                <div class="urike-petta">
+                    <div class="heading">
+                        <p id="home">CURRENT WEATHER</p>
+                        <p class="current-day-and-time"></p>
+                    </div>
+                    <div class="main-weather-info">
+                        <div><h1 class="current-temp"><%=Math.round(object.main.temp)%>&deg;C</h1>
+                        <span class="city-name"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;<%= city %></span></div>
+                        <span>~ Drink More Water""</span>
+                        <div>
+                            <span style="display: flex; align-items: center;"><img src=<%=`https://openweathermap.org/img/wn/${object.weather[0].icon}.png`%> style="height: 32px; width: 32px;" alt=""><span id="weatherCondition"><%= object.weather[0].description[0].toUpperCase() + object.weather[0].description.slice(1)%></span><br></span><span>Feels like <%=Math.round(object.main.feels_like)%>&deg;C</span>
+                        </div>
+                    </div>
+                    <div class="more-weather-info">
+                        <div class="more">
+                            <b>Wind Speed</b>
+                            <img src="/images/wind_icon.png" alt="">
+                            <span ><%= object.wind.speed %> m/s</span>
+                        </div>
+                        <div class="more">
+                            <b>Visibility</b>
+                            <img src="/images/visibility_icon.png" alt="">
+                            <span><%= parseInt(object.visibility/1000)%> km</span>
+                        </div>
+                        <div class="more">
+                            <b>Humidity</b>
+                            <img src="/images/humidity_icon.png" alt="">
+                            <span><%= object.main.humidity %>%</span>
+                        </div>
+                        <div class="more">
+                            <b>Cloudyness</b>
+                            <img src="/images/cloudy_icon.png" alt="">
+                            <span><%= object.clouds.all %>%</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="forecast-container">
+                <div class="days-5-heading">5-Days Weather Forecast</div>
+                <hr/>
+
+                <div class="forecast-card" onclick="scrollToDay('day1')">
+                    <div><%= day1 %>, Today</div>
+                    <div class="wind"><div><%= forecast[0].weather[0].description[0].toUpperCase() + forecast[0].weather[0].description.slice(1) %></div></div>
+                    <div class="temp">
+                        <img src="https://openweathermap.org/img/wn/<%=forecast[4].weather[0].icon%>.png" style="height: 50px;"/>
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <span><%= Math.round(Math.max(...forecast.slice(0, 7).map(entry => entry.main.temp))) %>&deg;C</span>
+                            <span><%= Math.round(Math.min(...forecast.slice(0, 7).map(entry => entry.main.temp))) %>&deg;C</span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="forecast-card" onclick="scrollToDay('day2')">
+                    <div><%= day2 %>, Tommorow</div>
+                    <div class="wind"><div><%= forecast[8].weather[0].description[0].toUpperCase() + forecast[8].weather[0].description.slice(1) %></div></div>
+                    <div class="temp">
+                        <img src="https://openweathermap.org/img/wn/<%=forecast[7].weather[0].icon%>.png" style="height: 50px;"/>
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <span><%= Math.round(Math.max(...forecast.slice(8, 15).map(entry => entry.main.temp))) %>&deg;C</span>
+                            <span><%= Math.round(Math.min(...forecast.slice(8, 15).map(entry => entry.main.temp))) %>&deg;C</span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="forecast-card" onclick="scrollToDay('day3')">
+                    <div><%= day3 %>, <%= month3 %></div>
+                    <div class="wind"><div><%= forecast[16].weather[0].description[0].toUpperCase() + forecast[16].weather[0].description.slice(1) %></div></div>
+                    <div class="temp">
+                        <img src="https://openweathermap.org/img/wn/<%=forecast[20].weather[0].icon%>.png" style="height: 50px;"/>
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <span><%= Math.round(Math.max(...forecast.slice(16, 23).map(entry => entry.main.temp))) %>&deg;C</span>
+                            <span><%= Math.round(Math.min(...forecast.slice(16, 23).map(entry => entry.main.temp))) %>&deg;C</span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="forecast-card" onclick="scrollToDay('day4')">
+                    <div><%= day4 %>, <%= month4 %></div>
+                    <div class="wind"><div><%= forecast[24].weather[0].description[0].toUpperCase() + forecast[24].weather[0].description.slice(1) %></div></div>
+                    <div class="temp">
+                        <img src="https://openweathermap.org/img/wn/<%=forecast[29].weather[0].icon%>.png" style="height: 50px;"/>
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <span><%= Math.round(Math.max(...forecast.slice(24, 31).map(entry => entry.main.temp))) %>&deg;C</span>
+                            <span><%= Math.round(Math.min(...forecast.slice(24, 31).map(entry => entry.main.temp))) %>&deg;C</span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="forecast-card" onclick="scrollToDay('day5')">
+                    <div><%= day5 %>, <%= month5 %></div>
+                    <div class="wind"><div><%= forecast[32].weather[0].description[0].toUpperCase() + forecast[32].weather[0].description.slice(1) %></div></div>
+                    <div class="temp">
+                        <img src="https://openweathermap.org/img/wn/<%=forecast[37].weather[0].icon%>.png" style="height: 50px;"/>
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <span><%= Math.round(Math.max(...forecast.slice(32, 39).map(entry => entry.main.temp))) %>&deg;C</span>
+                            <span><%= Math.round(Math.min(...forecast.slice(32, 39).map(entry => entry.main.temp))) %>&deg;C</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hourly-container" id="hourly">
+                <div style="display: flex; justify-content: space-around;">
+                    <div id="day1">   
+                        <div style="padding-left: 12px;">Today,<span class="today-date"><%= month1 %></span></div>
+                        <div style="display: flex; justify-content: space-around;">
+                            <% let arr = ["12:00 AM", "3:00 AM", "6:00 AM", "9:00 AM", "12:00 PM", "3:00 AM", "6:00 PM", "9:00 PM"]; %>
+                            <% let j = 0 %>
+                            <% for(let i=0; i<=7; i++) {%>
+                                <div class="hour">
+                                    <span><%= arr[j] %></span>
+                                    <% j++ %>
+                                    <img src="https://openweathermap.org/img/wn/<%=forecast[i].weather[0].icon%>.png" alt="">
+                                    <span><%= Math.round(forecast[i].main.temp) %>&deg;C</span>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+          
+                    <div id="day2">
+                        <div style="padding-left: 12px;">Tomorrow, <span class="today-date"><%= month2 %></span></div>
+                            <div style="display: flex; justify-content: space-around;">
+                                <% j = 0 %>
+                                <% for(let i=8; i<=15; i++) {%>
+                                    <div class="hour">
+                                        <span><%= arr[j] %></span>
+                                        <% j++ %>
+                                        <img src="https://openweathermap.org/img/wn/<%=forecast[i].weather[0].icon%>.png" alt="">
+                                        <span><%= Math.round(forecast[i].main.temp) %>&deg;C</span>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                    <div id="day3">
+                        <div style="padding-left: 12px;"><%= day3 %>,<span class="today-date"><%= month3 %></span></div> 
+                            <div style="display: flex; justify-content: space-around;">
+                                <% j = 0 %>
+                                <% for(let i=16; i<=23; i++) {%>
+                                    <div class="hour">
+                                        <span><%= arr[j] %></span>
+                                        <% j++ %>
+                                        <img src="https://openweathermap.org/img/wn/<%=forecast[i].weather[0].icon%>.png" alt="">
+                                        <span><%= Math.round(forecast[i].main.temp) %>&deg;C</span>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+
+                    <div id="day4">
+                        <div style="padding-left: 12px;"> <%= day4 %>,<span class="today-date"><%= month4 %></span></div>
+                            <div style="display: flex; justify-content: space-around;">
+                                <% j = 0 %>
+                                <% for(let i=24; i<=31; i++) {%>
+                                    <div class="hour">
+                                        <span><%= arr[j] %></span>
+                                        <% j++ %>
+                                        <img src="https://openweathermap.org/img/wn/<%=forecast[i].weather[0].icon%>.png" alt="">
+                                        <span><%= Math.round(forecast[i].main.temp) %>&deg;C</span>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                    <div id="day5">   
+                        <div style="padding-left: 12px;"><%= day5 %>,<span class="today-date"><%= month5 %></span></div>
+                            <div style="display: flex; justify-content: space-around;">
+                                <% j = 0 %>
+                                <% for(let i=32; i<=39; i++) {%>
+                                    <div class="hour">
+                                        <span><%= arr[j] %></span>
+                                        <% j++ %>
+                                        <img src="https://openweathermap.org/img/wn/<%=forecast[i].weather[0].icon%>.png" alt="">
+                                        <span><%= Math.round(forecast[i].main.temp) %>&deg;C</span>
+                                    </div>
+                                <% } %>
+                            </div> 
+                        </div>
+                    </div>
+            </div>
+
+
+            <div class="graph-container" id="Max-Min">
+                <canvas id="weatherGraph" class="graph"></canvas>
+            </div>
+
+
+
+            
+            <h2 style="text-align: left; width: 100%;" id="map-name">Maps:</h2>
+            <div class="map-container" id="map">
+                
+            </div>
+
+            <h2 style="text-align: left; width: 100%;" id="details">Weather details:</h2>
+            <div class="grid-container">
+                <% const sunrise = new Date(object.sys.sunrise * 1000).toLocaleTimeString('en-US',{hour: '2-digit', minute: '2-digit', hour12: true}) %>
+                <% const sunset = new Date(object.sys.sunset * 1000).toLocaleTimeString('en-US',{hour: '2-digit', minute: '2-digit', hour12: true}) %>
+                <div class="grid-items">
+                    <div class="head">Sunrise</div>
+                    <img style="height: 48px; width: 48px;" src="/images/sunrise.png" alt="">
+                    <span><%= sunrise %></span>
+                </div>
+                <div class="grid-items">
+                    <div class="head">Sunset</div>
+                    <img style="height: 48px; width: 48px;" src="/images/sunset.png" alt="">
+                    <span><%= sunset %></span>
+                </div>
+                <div class="grid-items">
+                    <div class="head">Pressure</div>
+                    <img style="height: 48px; width: 48px;" src="/images/pressure.png" alt="">
+                    <span><%= object.main.pressure %> hPa</span>
+                </div>
+                <div class="grid-items">
+                    <div class="head">Ground Level</div>
+                    <img style="height: 48px; width: 48px;" src="/images/airpressure.png" alt="">
+                    <span><%= object.main.grnd_level %> hPa</span>
+                </div>
+                <div class="grid-items">
+                    <div class="head">Sea Level</div>
+                    <img style="height: 48px; width: 48px;" src="/images/pressure.png" alt="">
+                    <span><%= object.main.sea_level %> hPa</span>
+                </div>
+                <div class="grid-items">
+                    <div class="head">Wind direction</div>
+                    <img style="height: 48px; width: 48px;" src="/images/wind-direction.png" alt="">
+                    <span id="windDirection"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<div class="dim-overlay" id="dimOverlay">
+    <span class="loader"></span>
+    
+</div>
+    <script>
+        let hgts = JSON.parse(localStorage.getItem('object')) || [];
+        let historyData = {
+            id : 1 + hgts.length,
+            location : '<%=city%>',
+            temperature : '<%=Math.round(object.main.temp)%>&deg;C',
+            images : '<%=`https://openweathermap.org/img/wn/${object.weather[0].icon}.png`%>',
+            condition : '<%= object.weather[0].description[0].toUpperCase() + object.weather[0].description.slice(1)%>',
+            feelsLike : ' <%=Math.round(object.main.feels_like)%>&deg;C',
+            date : '<%= new Date().toLocaleString()%>'
+        };
+        if (!Array.isArray(hgts)) {
+            hgts = []; 
+        }
+        hgts.push(historyData)
+
+        localStorage.setItem("object", JSON.stringify(hgts));
+        
+
+        let ctx = document.getElementById("weatherGraph");
+        
+        new Chart(ctx,{
+            type : "line",
+            data : {
+                labels:["<%= day1 %>","<%= day2 %>","<%= day3 %>","<%= day4 %>","<%= day5 %>"],
+                datasets :[
+                    {
+                        label:"Max-Temperature",
+                        data : [
+                            "<%=Math.round(Math.max(...forecast.slice(0, 7).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.max(...forecast.slice(8, 15).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.max(...forecast.slice(16, 23).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.max(...forecast.slice(24, 31).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.max(...forecast.slice(32, 39).map(entry => entry.main.temp)))%>"
+                        ],
+                        borderWidth: 1,
+                        borderColor : "#eb6e4b",
+                        color : "#ffffff",
+                        borderDash: [3],
+                        backgroundColor: "#eb6e4b",
+                        pointStyle: 'circle',
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label:"Min-Temperature",
+                        data : [
+                            "<%=Math.round(Math.min(...forecast.slice(0, 7).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.min(...forecast.slice(8, 15).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.min(...forecast.slice(16, 23).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.min(...forecast.slice(24, 31).map(entry => entry.main.temp)))%>",
+                            "<%=Math.round(Math.min(...forecast.slice(32, 39).map(entry => entry.main.temp)))%>"
+                        ],
+                        borderWidth: 1,
+                        borderColor : "#21dbcf",
+                        color : "#ffffff",
+                        borderDash: [3],
+                        backgroundColor: "#21dbcf",
+                        pointStyle: 'circle',
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    },
+   
+   
+
+                ]
+            },
+            options :{
+                responsive : true,
+                plugins:{
+                    legend:{
+                        position:"top",
+                        labels:{
+                            color:"#ffffff"
+                        }
+                    },
+                },
+                scales:{
+                    x:{
+                        ticks:{
+                            color : "#ffffff",
+                        }
+                    },
+                    y:{
+                        display:true,
+                        title:{
+                            display:true,
+                        },
+                        ticks:{
+                            color : "#ffffff"
+                        },
+
+                        beginAtZero :true,
+                        color:"#ffffff",
+          
+                    },
+                    
+                }
+            }
+        });
+
+
+        function getWindDirection(deg){
+            const directions = ['North', 'Northeast', 'East', 'Eastsouth', 'South', 'Southwest', 'West', 'Northwest', 'North'];
+            const idx = Math.round(deg/45) % 8;
+            return directions[idx];
+        }
+        const windDegree = "<%= object.wind.deg %>";
+        document.getElementById("windDirection").innerText = getWindDirection(windDegree);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://kit.fontawesome.com/b6a6b996df.js" crossorigin="anonymous"></script>
+    <script src="/js/home.js"></script>
+</body>
+</html>
+
+

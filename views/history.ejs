@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/css/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&display=swap" rel="stylesheet">
+    <title>History</title>
+</head>
+<style>
+    *{
+        font-family: "Red Hat Display",Arial, sans-serif;
+    }
+    body{
+        margin: 0px;
+        box-sizing: border-box;
+        height: 100vh;  
+        color: #ffffff;
+    }
+    .history-container{
+        display: flex;
+        justify-content: center;
+    }
+    .fixed-container-history{  
+        width: 80%;
+        height: 100vh;
+      
+    }
+    .history-heading{
+        color: #ffffff;
+        text-align: center;
+    }
+    th{
+        font-size: 18px;
+        
+    }
+    table{
+        width: 100%;
+        margin: 20px auto;
+        border-collapse: collapse;
+    }
+    th,
+        td {
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border: 1px solid #dddddd26;
+            text-align: center;
+        }
+
+</style>
+<body>
+    <div class="history-container">
+        <div class="fixed-container-history">
+            <div style="margin-top:20px;">
+                <h1 class="history-heading">Search History</h1>
+            </div>
+            <hr style="opacity: 0.1; border-radius: 20px;"/>
+            <table >
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Location</th>
+                        <th>Temperature</th>
+                        <th>Condition</th>
+                        <th>feels like</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody id="tableContent">
+                    
+                </tbody>
+            </table>
+
+        </div>
+        
+    </div>
+    <script src="/js/history.js" defer></script>
+</body>
+</html>
