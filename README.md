@@ -1,5 +1,5 @@
 # Weatheria
-- [Visit Wetheria]()
+- [Visit Wetheria](https://weatheria-nami.onrender.com/)
 ## About the Project
 This is a simple Weather App that allows user to see real-time weather report of a any city that user searches for. We used [OpenWeather API](https://openweathermap.org/) to fetch the weather data and displays it. we also used [Open-Meteo's API](https://open-meteo.com/) to fetch the location coordinates.
 
