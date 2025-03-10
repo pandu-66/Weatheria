@@ -13,6 +13,7 @@ body{
     padding: 0px;
     background-color: #24252a;
     overflow-y: scroll;
+    height: auto;
 }
 
 .dim-overlay {
@@ -296,7 +297,7 @@ header{
 .dashboard-container{
     width: 80%;
     max-width: 80%;
-    height: 100vh;
+    height: auto;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -644,6 +645,11 @@ hr{
     background-color: #ffffff
   }
 
+
+  .footer-container{
+    height: 80px;
+    width: 100%;
+  }
 
   @media (max-width: 576px) {
     *{

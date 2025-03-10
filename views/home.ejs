@@ -29,7 +29,7 @@
     <% let month3 = months[date3.getMonth()]; %>
     <% let month4 = months[date4.getMonth()]; %>
     <% let month5 = months[date5.getMonth()]; %>
-<div class="container">
+
     <header>
         <div class="logo_container"> 
             <img class="nav_logo" onclick="goHome()" src="/images/logo.png" alt=""> 
@@ -317,16 +317,16 @@
                     <span id="windDirection"></span>
                 </div>
             </div>
+
         </div>
+        
+        
     </div>
-
-
-
-</div>
-<div class="dim-overlay" id="dimOverlay">
-    <span class="loader"></span>
-    
-</div>
+    <%- include("./includes/footer.ejs") %>
+    <div class="dim-overlay" id="dimOverlay">
+        <span class="loader"></span>
+        
+    </div>
     <script>
         let hgts = JSON.parse(localStorage.getItem('object')) || [];
         let historyData = {
@@ -441,6 +441,7 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://kit.fontawesome.com/b6a6b996df.js" crossorigin="anonymous"></script>
     <script src="/js/home.js"></script>
+    
 </body>
 </html>
 
